@@ -1,0 +1,209 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "错开定时开关",
+        "description": "设定一个按天数循环的周期。每条动作由“周期内第几天”加“具体时刻”决定，配置一次即可无限循环，适合排班表之类的场景。",
+        "data": {
+          "name": "名称",
+          "anchor_date": "周期第一天",
+          "cycle_days": "周期长度（天）"
+        },
+        "data_description": {
+          "name": "显示在状态传感器和实体名称中。",
+          "anchor_date": "周期的第 1 天，之后每“周期长度”天重复一次。",
+          "cycle_days": "一个完整周期有多少天，例如 8 天倒班就是 8。"
+        }
+      },
+      "init": {
+        "title": "周期设置",
+        "data": {
+          "name": "名称",
+          "anchor_date": "周期第一天",
+          "cycle_days": "周期长度（天）"
+        }
+      },
+      "menu": {
+        "title": "动作列表",
+        "description": "周期 {cycle_days} 天 · 共 {count} 条动作。\n\n{summary}\n{warning}",
+        "menu_options": {
+          "add_action": "添加动作",
+          "edit_action": "修改动作",
+          "delete_action": "删除动作",
+          "finish": "保存并完成"
+        },
+        "rule_summary": {
+          "rule_label": "第 {day} 天 {time} - {service}",
+          "rule_label_target": "第 {day} 天 {time} - {service}（{entity}）",
+          "rule_disabled": "{label}（已停用）",
+          "no_actions": "还没有动作，请用下面的“添加动作”。",
+          "action_on": "打开",
+          "action_off": "关闭"
+        },
+        "warning_no_actions": "\n\n**这个周期还没有动作**，不会执行任何操作。请先在下面添加至少一条动作。"
+      },
+      "rule": {
+        "title": "什么时候执行？",
+        "description": "天数从 1 到 {cycle_days}。",
+        "data": {
+          "day": "周期内第几天",
+          "time": "执行时刻",
+          "service": "执行动作"
+        },
+        "data_description": {
+          "day": "1 表示周期第一天。",
+          "time": "使用本地时间，夏令时变化会自动处理。",
+          "service": "打开或关闭实体，或调用任意服务并附带自定义参数。"
+        }
+      },
+      "target": {
+        "title": "目标实体",
+        "description": "将会对该实体执行“{service}”。",
+        "data": {
+          "entity_id": "实体"
+        }
+      },
+      "custom": {
+        "title": "自定义服务调用",
+        "description": "可调用任意 Home Assistant 服务，例如“notify.mobile_app_phone”。",
+        "data": {
+          "service": "服务",
+          "data": "服务参数"
+        }
+      },
+      "pick": {
+        "title": "选择动作",
+        "description": "请选择要修改的动作。",
+        "data": {
+          "rule_index": "动作"
+        }
+      },
+      "confirm_delete": {
+        "title": "删除动作",
+        "description": "选择要删除的动作，保存后立即生效。",
+        "data": {
+          "rule_index": "动作"
+        }
+      }
+    },
+    "error": {
+      "invalid_service": "请使用“domain.service”格式，例如“switch.turn_on”。",
+      "invalid_name": "请输入 1 到 64 个字符的名称。"
+    },
+    "abort": {
+      "too_many_rules": "该周期的动作数量已达上限。"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "周期设置",
+        "data": {
+          "name": "名称",
+          "anchor_date": "周期第一天",
+          "cycle_days": "周期长度（天）"
+        },
+        "data_description": {}
+      },
+      "menu": {
+        "title": "动作列表",
+        "description": "周期 {cycle_days} 天 · 共 {count} 条动作。\n\n{summary}\n{warning}",
+        "menu_options": {
+          "add_action": "添加动作",
+          "edit_action": "修改动作",
+          "delete_action": "删除动作",
+          "finish": "保存并完成"
+        },
+        "rule_summary": {
+          "rule_label": "第 {day} 天 {time} - {service}",
+          "rule_label_target": "第 {day} 天 {time} - {service}（{entity}）",
+          "rule_disabled": "{label}（已停用）",
+          "no_actions": "还没有动作，请用下面的“添加动作”。",
+          "action_on": "打开",
+          "action_off": "关闭"
+        },
+        "warning_no_actions": "\n\n**这个周期还没有动作**，不会执行任何操作。请先在下面添加至少一条动作。"
+      },
+      "rule": {
+        "title": "什么时候执行？",
+        "description": "天数从 1 到 {cycle_days}。",
+        "data": {
+          "day": "周期内第几天",
+          "time": "执行时刻",
+          "service": "执行动作"
+        },
+        "data_description": {
+          "day": "1 表示周期第一天。",
+          "time": "使用本地时间，夏令时变化会自动处理。"
+        }
+      },
+      "target": {
+        "title": "目标实体",
+        "description": "将会对该实体执行“{service}”。",
+        "data": {
+          "entity_id": "实体"
+        }
+      },
+      "custom": {
+        "title": "自定义服务调用",
+        "data": {
+          "service": "服务",
+          "data": "服务参数"
+        }
+      },
+      "pick": {
+        "title": "选择动作",
+        "description": "请选择要修改的动作。",
+        "data": {
+          "rule_index": "动作"
+        }
+      },
+      "confirm_delete": {
+        "title": "删除动作",
+        "description": "选择要删除的动作，保存后立即生效。",
+        "data": {
+          "rule_index": "动作"
+        }
+      }
+    },
+    "error": {
+      "invalid_service": "请使用“domain.service”格式，例如“switch.turn_on”。",
+      "invalid_name": "请输入 1 到 64 个字符的名称。"
+    },
+    "abort": {
+      "too_many_rules": "该周期的动作数量已达上限。"
+    }
+  },
+  "selector": {
+    "service": {
+      "options": {
+        "switch.turn_on": "打开",
+        "switch.turn_off": "关闭",
+        "custom": "其他服务调用"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "next_run": {
+        "name": "下次执行时间"
+      }
+    }
+  },
+  "services": {
+    "run_action": {
+      "name": "立即执行动作",
+      "description": "跳过时间判断，立即执行周期中的某条动作。",
+      "fields": {
+        "entry_id": {
+          "name": "周期",
+          "description": "动作所属的错开定时开关周期。"
+        },
+        "rule_index": {
+          "name": "动作序号",
+          "description": "该动作在周期中的序号，从 0 开始，可从状态传感器中查看。"
+        }
+      }
+    }
+  }
+}

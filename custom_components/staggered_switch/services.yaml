@@ -1,0 +1,17 @@
+run_action:
+  fields:
+    entry_id:
+      required: true
+      example: 01J8Z3Q9VK4M2P7T1H6B5N0CXD
+      selector:
+        text:
+    rule_index:
+      required: false
+      default: 0
+      example: 0
+      selector:
+        number:
+          min: 0
+          max: 199
+          step: 1
+          mode: box

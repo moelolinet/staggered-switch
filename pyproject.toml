@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "staggered-switch"
+version = "1.0.0"
+description = "Time based, cycle aware switching helper for Home Assistant"
+requires-python = ">=3.13"
+
+[tool.setuptools]
+packages = ["custom_components.staggered_switch"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-p pytest_homeassistant_custom_component --strict-markers"
+filterwarnings = [
+  "ignore::DeprecationWarning:homeassistant.*",
+]

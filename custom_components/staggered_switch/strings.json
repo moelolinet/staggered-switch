@@ -1,0 +1,209 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Staggered Switch",
+        "description": "Define a repeating cycle of days. Actions are addressed as “day N of the cycle” plus a clock time, so a roster can be entered once and will repeat automatically.",
+        "data": {
+          "name": "Name",
+          "anchor_date": "First day of the cycle",
+          "cycle_days": "Cycle length (days)"
+        },
+        "data_description": {
+          "name": "Shown on the status sensor and in the entity name.",
+          "anchor_date": "Day 1 of the cycle. The schedule repeats every “cycle length” days from here.",
+          "cycle_days": "How many days a full cycle lasts, e.g. 8 for an eight day shift roster."
+        }
+      },
+      "init": {
+        "title": "Cycle settings",
+        "data": {
+          "name": "Name",
+          "anchor_date": "First day of the cycle",
+          "cycle_days": "Cycle length (days)"
+        }
+      },
+      "menu": {
+        "title": "Actions",
+        "description": "Cycle length: {cycle_days} days · {count} action(s).\n\n{summary}\n{warning}",
+        "menu_options": {
+          "add_action": "Add an action",
+          "edit_action": "Edit an action",
+          "delete_action": "Delete an action",
+          "finish": "Save and finish"
+        },
+        "rule_summary": {
+          "rule_label": "Day {day} at {time} - {service}",
+          "rule_label_target": "Day {day} at {time} - {service} ({entity})",
+          "rule_disabled": "{label} (disabled)",
+          "no_actions": "No actions yet - use *Add an action* below.",
+          "action_on": "turn on",
+          "action_off": "turn off"
+        },
+        "warning_no_actions": "\n\n**This cycle has no actions yet**, so nothing will run. Add at least one action below."
+      },
+      "rule": {
+        "title": "When should it run?",
+        "description": "Day numbers run from 1 to {cycle_days}.",
+        "data": {
+          "day": "Day of the cycle",
+          "time": "Time of day",
+          "service": "Action"
+        },
+        "data_description": {
+          "day": "1 is the first day of the cycle.",
+          "time": "Local time; daylight saving changes are handled automatically.",
+          "service": "Turn the entity on, off, or call any service with custom data."
+        }
+      },
+      "target": {
+        "title": "Which entity?",
+        "description": "The action “{service}” will be applied to this entity.",
+        "data": {
+          "entity_id": "Entity"
+        }
+      },
+      "custom": {
+        "title": "Custom service call",
+        "description": "Call any Home Assistant service, for example “notify.mobile_app_phone”.",
+        "data": {
+          "service": "Service",
+          "data": "Service data"
+        }
+      },
+      "pick": {
+        "title": "Select an action",
+        "description": "Choose the action to edit.",
+        "data": {
+          "rule_index": "Action"
+        }
+      },
+      "confirm_delete": {
+        "title": "Delete an action",
+        "description": "Choose the action to remove. It is deleted when you save.",
+        "data": {
+          "rule_index": "Action"
+        }
+      }
+    },
+    "error": {
+      "invalid_service": "Use the “domain.service” format, for example “switch.turn_on”.",
+      "invalid_name": "Enter a name of 1 to 64 characters."
+    },
+    "abort": {
+      "too_many_rules": "This cycle already has the maximum number of actions."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Cycle settings",
+        "data": {
+          "name": "Name",
+          "anchor_date": "First day of the cycle",
+          "cycle_days": "Cycle length (days)"
+        },
+        "data_description": {}
+      },
+      "menu": {
+        "title": "Actions",
+        "description": "Cycle length: {cycle_days} days · {count} action(s).\n\n{summary}\n{warning}",
+        "menu_options": {
+          "add_action": "Add an action",
+          "edit_action": "Edit an action",
+          "delete_action": "Delete an action",
+          "finish": "Save and finish"
+        },
+        "rule_summary": {
+          "rule_label": "Day {day} at {time} - {service}",
+          "rule_label_target": "Day {day} at {time} - {service} ({entity})",
+          "rule_disabled": "{label} (disabled)",
+          "no_actions": "No actions yet - use *Add an action* below.",
+          "action_on": "turn on",
+          "action_off": "turn off"
+        },
+        "warning_no_actions": "\n\n**This cycle has no actions yet**, so nothing will run. Add at least one action below."
+      },
+      "rule": {
+        "title": "When should it run?",
+        "description": "Day numbers run from 1 to {cycle_days}.",
+        "data": {
+          "day": "Day of the cycle",
+          "time": "Time of day",
+          "service": "Action"
+        },
+        "data_description": {
+          "day": "1 is the first day of the cycle.",
+          "time": "Local time; daylight saving changes are handled automatically."
+        }
+      },
+      "target": {
+        "title": "Which entity?",
+        "description": "The action “{service}” will be applied to this entity.",
+        "data": {
+          "entity_id": "Entity"
+        }
+      },
+      "custom": {
+        "title": "Custom service call",
+        "data": {
+          "service": "Service",
+          "data": "Service data"
+        }
+      },
+      "pick": {
+        "title": "Select an action",
+        "description": "Choose the action to edit.",
+        "data": {
+          "rule_index": "Action"
+        }
+      },
+      "confirm_delete": {
+        "title": "Delete an action",
+        "description": "Choose the action to remove. It is deleted when you save.",
+        "data": {
+          "rule_index": "Action"
+        }
+      }
+    },
+    "error": {
+      "invalid_service": "Use the “domain.service” format, for example “switch.turn_on”.",
+      "invalid_name": "Enter a name of 1 to 64 characters."
+    },
+    "abort": {
+      "too_many_rules": "This cycle already has the maximum number of actions."
+    }
+  },
+  "selector": {
+    "service": {
+      "options": {
+        "switch.turn_on": "Turn on",
+        "switch.turn_off": "Turn off",
+        "custom": "Another service call"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "next_run": {
+        "name": "Next run"
+      }
+    }
+  },
+  "services": {
+    "run_action": {
+      "name": "Run action now",
+      "description": "Run one configured action of a cycle immediately, without waiting for its scheduled time.",
+      "fields": {
+        "entry_id": {
+          "name": "Cycle",
+          "description": "The staggered switch cycle that owns the action."
+        },
+        "rule_index": {
+          "name": "Action index",
+          "description": "Zero based position of the action in the cycle, as listed by the status sensor."
+        }
+      }
+    }
+  }
+}
