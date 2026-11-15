@@ -379,11 +379,10 @@ async def test_config_flow() -> None:
     check("rule step", result["step_id"] == "rule")
 
     result = await hass.config_entries.flow.async_configure(
-        fid, {"day": 1, "time": "06:00:00", "service": "switch.turn_on"}
+        fid,
+        {"day": 1, "time": "06:00:00", "service": "switch.turn_on",
+         "entity_id": "switch.demo"},
     )
-    check("target step", result["step_id"] == "target")
-
-    result = await hass.config_entries.flow.async_configure(fid, {"entity_id": "switch.demo"})
     check("back to menu", result["type"] == "menu")
 
     result = await hass.config_entries.flow.async_configure(fid, {"next_step_id": "finish"})
@@ -406,9 +405,11 @@ async def test_config_flow() -> None:
     check("options menu", result["type"] == "menu")
     result = await hass.config_entries.options.async_configure(fid, {"next_step_id": "add_action"})
     await hass.config_entries.options.async_configure(
-        fid, {"day": 3, "time": "09:45:00", "service": "switch.turn_off"}
+        fid,
+        {"day": 3, "time": "09:45:00", "service": "switch.turn_off",
+         "entity_id": "switch.other"},
+
     )
-    await hass.config_entries.options.async_configure(fid, {"entity_id": "switch.other"})
     result = await hass.config_entries.options.async_configure(fid, {"next_step_id": "finish"})
     check("options saved", result["type"] == "create_entry", str(result.get("type")))
     await hass.async_block_till_done()
@@ -743,10 +744,11 @@ async def test_localisation() -> None:
             fid, {"name": "Cycle", "anchor_date": today, "cycle_days": 4}
         )
         await hass.config_entries.flow.async_configure(fid, {"next_step_id": "add_action"})
-        await hass.config_entries.flow.async_configure(
-            fid, {"day": 1, "time": "06:00:00", "service": "switch.turn_on"}
+        r = await hass.config_entries.flow.async_configure(
+            fid,
+            {"day": 1, "time": "06:00:00", "service": "switch.turn_on",
+             "entity_id": "switch.x"},
         )
-        r = await hass.config_entries.flow.async_configure(fid, {"entity_id": "switch.x"})
         summary = r.get("description_placeholders", {}).get("summary", "")
         check(f"{language}: summary resolved", bool(summary), repr(summary))
         check(
@@ -956,9 +958,11 @@ async def test_retarget_entity() -> None:
     )
     await hass.config_entries.flow.async_configure(fid, {"next_step_id": "add_action"})
     await hass.config_entries.flow.async_configure(
-        fid, {"day": 1, "time": "06:00:00", "service": "switch.turn_on"}
+        fid,
+        {"day": 1, "time": "06:00:00", "service": "switch.turn_on",
+         "entity_id": "switch.a"},
+
     )
-    await hass.config_entries.flow.async_configure(fid, {"entity_id": "switch.a"})
     await hass.config_entries.flow.async_configure(fid, {"next_step_id": "finish"})
     await hass.async_block_till_done()
 
@@ -975,9 +979,11 @@ async def test_retarget_entity() -> None:
     await hass.config_entries.options.async_configure(fid, {"next_step_id": "edit_action"})
     await hass.config_entries.options.async_configure(fid, {"rule_index": "0"})
     await hass.config_entries.options.async_configure(
-        fid, {"day": 1, "time": "06:00:00", "service": "switch.turn_on"}
+        fid,
+        {"day": 1, "time": "06:00:00", "service": "switch.turn_on",
+         "entity_id": "cover.x"},
+
     )
-    await hass.config_entries.options.async_configure(fid, {"entity_id": "cover.x"})
     await hass.config_entries.options.async_configure(fid, {"next_step_id": "finish"})
     await hass.async_block_till_done()
 
@@ -993,9 +999,11 @@ async def test_retarget_entity() -> None:
     await hass.config_entries.options.async_configure(fid, {"next_step_id": "edit_action"})
     await hass.config_entries.options.async_configure(fid, {"rule_index": "0"})
     await hass.config_entries.options.async_configure(
-        fid, {"day": 2, "time": "07:00:00", "service": "switch.turn_off"}
+        fid,
+        {"day": 2, "time": "07:00:00", "service": "switch.turn_off",
+         "entity_id": "light.y"},
+
     )
-    await hass.config_entries.options.async_configure(fid, {"entity_id": "light.y"})
     await hass.config_entries.options.async_configure(fid, {"next_step_id": "finish"})
     await hass.async_block_till_done()
 
@@ -1059,9 +1067,11 @@ async def test_integration_visibility_and_empty_cycle() -> None:
             fid, {"next_step_id": "add_action"}
         )
         await hass.config_entries.options.async_configure(
-            fid, {"day": 1, "time": "06:00:00", "service": "switch.turn_on"}
+            fid,
+            {"day": 1, "time": "06:00:00", "service": "switch.turn_on",
+             "entity_id": "switch.a"},
+
         )
-        await hass.config_entries.options.async_configure(fid, {"entity_id": "switch.a"})
         r = await hass.config_entries.options.async_configure(
             fid, {"next_step_id": "finish"}
         )
@@ -1113,6 +1123,113 @@ async def test_existing_install_editable() -> None:
     entry = hass.config_entries.async_entries(DOMAIN)[0]
     check("action deleted", dict(entry.options)["rules"] == [],
           str(dict(entry.options)["rules"]))
+    await hass.async_stop(force=True)
+
+
+def test_brand_assets() -> None:
+    """Home Assistant only serves brand images from inside the package."""
+    print("brand assets")
+    from PIL import Image  # noqa: F401  (only to read the PNG header)
+
+    root = pathlib.Path(__file__).resolve().parent.parent
+    pkg_brand = root / "custom_components" / "staggered_switch" / "brand"
+    repo_brand = root / "brand"
+
+    check("package brand/ exists", pkg_brand.is_dir(), str(pkg_brand))
+    check("repo brand/icon.png exists (HACS)", (repo_brand / "icon.png").is_file())
+
+    # HA's ALLOWED_IMAGES list - only these names are served.
+    allowed = {
+        "icon.png", "logo.png", "icon@2x.png", "logo@2x.png",
+        "dark_icon.png", "dark_logo.png", "dark_icon@2x.png", "dark_logo@2x.png",
+    }
+    present = {p.name for p in pkg_brand.iterdir()} if pkg_brand.is_dir() else set()
+    unknown = present - allowed
+    check("only allowed file names", not unknown, str(unknown))
+
+    for name in ("icon.png", "icon@2x.png"):
+        path = pkg_brand / name
+        if not path.is_file():
+            check(f"{name} present", False, "missing")
+            continue
+        data = path.read_bytes()
+        check(f"{name} is a PNG", data[:8] == b"\x89PNG\r\n\x1a\n", str(data[:8]))
+        with Image.open(path) as im:
+            expected = 512 if "@2x" in name else 256
+            check(f"{name} is {expected}px", im.size == (expected, expected), str(im.size))
+            check(f"{name} has alpha", im.mode in ("RGBA", "LA", "P"), im.mode)
+
+    # The integration must report branding so the brands view can serve it.
+    total = sum(p.stat().st_size for p in pkg_brand.iterdir()) if pkg_brand.is_dir() else 0
+    check("brand assets stay small", total < 1_500_000, f"{total // 1024} KB")
+
+
+async def test_single_page_action_form() -> None:
+    """Day, time, action and entity must all be on one page."""
+    print("single-page action form")
+    config_dir = pathlib.Path(tempfile.mkdtemp(prefix="ha-verify-onepage-"))
+    calls: list[tuple[str, str]] = []
+    hass = await boot(config_dir, calls)
+    today = dt_util.now().date().isoformat()
+
+    r = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    fid = r["flow_id"]
+    await hass.config_entries.flow.async_configure(
+        fid, {"name": "One page", "anchor_date": today, "cycle_days": 8}
+    )
+    r = await hass.config_entries.flow.async_configure(fid, {"next_step_id": "add_action"})
+    fields = {getattr(k, "schema", k) for k in r["data_schema"].schema}
+    check("one page has all four fields",
+          fields == {"day", "time", "service", "entity_id"}, str(fields))
+
+    # A turn-on action without an entity is refused with a clear error.
+    r = await hass.config_entries.flow.async_configure(
+        fid, {"day": 1, "time": "06:00:00", "service": "switch.turn_on"}
+    )
+    check("entity_required error",
+          r["type"] == "form" and (r.get("errors") or {}).get("base") == "entity_required",
+          str(r.get("errors")))
+
+    # Filling everything at once stores the action immediately.
+    r = await hass.config_entries.flow.async_configure(
+        fid,
+        {"day": 1, "time": "06:00:00", "service": "switch.turn_on",
+         "entity_id": "switch.a"},
+    )
+    check("stored in one submission", r["type"] == "menu", str(r.get("type")))
+    await hass.config_entries.flow.async_configure(fid, {"next_step_id": "finish"})
+    await hass.async_block_till_done()
+
+    entry = hass.config_entries.async_entries(DOMAIN)[0]
+    rule = dict(entry.options)["rules"][0]
+    check("rule stored correctly", rule["entity_id"] == "switch.a", str(rule))
+
+    # The edit form is prefilled from the stored action.
+    r = await hass.config_entries.options.async_init(entry.entry_id)
+    fid = r["flow_id"]
+    await hass.config_entries.options.async_configure(
+        fid, {"name": "One page", "anchor_date": today, "cycle_days": 8}
+    )
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "edit_action"})
+    r = await hass.config_entries.options.async_configure(fid, {"rule_index": "0"})
+
+    defaults = {}
+    for key in r["data_schema"].schema:
+        name = getattr(key, "schema", key)
+        default = getattr(key, "default", None)
+        defaults[name] = default() if callable(default) else default
+
+    check("edit prefills day", defaults.get("day") == 1, str(defaults.get("day")))
+    check("edit prefills entity", defaults.get("entity_id") == "switch.a",
+          str(defaults.get("entity_id")))
+
+    # There is no separate target step any more.
+    from homeassistant.helpers import translation
+    data = await translation.async_get_translations(
+        hass, "en", "config", integrations=[DOMAIN], config_flow=True
+    )
+    check("target step removed",
+          "component.staggered_switch.config.step.target.title" not in data)
     await hass.async_stop(force=True)
 
 
@@ -1183,9 +1300,11 @@ async def test_rename_cycle() -> None:
     )
     await hass.config_entries.flow.async_configure(fid, {"next_step_id": "add_action"})
     await hass.config_entries.flow.async_configure(
-        fid, {"day": 1, "time": "07:00:00", "service": "switch.turn_on"}
+        fid,
+        {"day": 1, "time": "07:00:00", "service": "switch.turn_on",
+         "entity_id": "switch.x"},
+
     )
-    await hass.config_entries.flow.async_configure(fid, {"entity_id": "switch.x"})
     await hass.config_entries.flow.async_configure(fid, {"next_step_id": "finish"})
     await hass.async_block_till_done()
 
@@ -1229,18 +1348,19 @@ async def test_edit_action_fields() -> None:
     ):
         await hass.config_entries.flow.async_configure(fid, {"next_step_id": "add_action"})
         await hass.config_entries.flow.async_configure(
-            fid, {"day": day, "time": tm, "service": svc}
+            fid, {"day": day, "time": tm, "service": svc, "entity_id": ent}
         )
-        await hass.config_entries.flow.async_configure(fid, {"entity_id": ent})
 
     r = await hass.config_entries.flow.async_configure(fid, {"next_step_id": "edit_action"})
     check("edit picker shown", r["step_id"] == "pick", str(r.get("step_id")))
     r = await hass.config_entries.flow.async_configure(fid, {"rule_index": "0"})
     check("edit prefilled", r["step_id"] == "rule", str(r.get("step_id")))
     r = await hass.config_entries.flow.async_configure(
-        fid, {"day": 3, "time": "07:30:00", "service": "switch.turn_on"}
+        fid,
+        {"day": 3, "time": "07:30:00", "service": "switch.turn_on",
+         "entity_id": "switch.c"},
+
     )
-    await hass.config_entries.flow.async_configure(fid, {"entity_id": "switch.c"})
     await hass.config_entries.flow.async_configure(fid, {"next_step_id": "finish"})
     await hass.async_block_till_done()
 
@@ -1388,6 +1508,8 @@ async def main() -> None:
     test_name_validation()
     test_dst_gap_and_ordering()
     test_payload_serialisation()
+    test_brand_assets()
+    await test_single_page_action_form()
     await test_integration_visibility_and_empty_cycle()
     await test_existing_install_editable()
     await test_retarget_entity()

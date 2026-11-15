@@ -66,7 +66,7 @@ Home Assistant 会先创建 config entry，再完成核心启动。此时其它�
 
 ## 排查记录
 
-开发过程中用真实的 Home Assistant 核心做了多轮排查，累计 181 项断言，发现的
+开发过程中用真实的 Home Assistant 核心做了多轮排查，累计 197 项断言，发现的
 真实问题与修复如下。
 
 | 问题 | 表现 | 修复 |
@@ -108,6 +108,8 @@ Home Assistant 会先创建 config entry，再完成核心启动。此时其它�
 | 200 条动作全部塞进传感器属性 | 单个状态约 21KB，无谓放大状态机 | 属性最多列 50 条，另加 `actions_total` |
 | `integration_type: helper` | 集成**不出现在“集成”页**，只在“设备”里能看到实体，用户无法配置已有条目 | 改为 `service` |
 | 未添加动作就保存时静默中止 | 什么都没创建，UI 无任何提示 | 允许保存空周期，并在菜单显示提示 |
+| 图标放在仓库根 `brand/` | Home Assistant **不显示图标**：它只从 `custom_components/<domain>/brand/` 读取 | 图标移入集成目录，根目录保留一份供 HACS |
+| 动作表单分成两页 | 先填“什么时候执行”，再跳到“目标实体”，操作割裂 | 合并为一个页面，实体字段在同页 |
 
 ## 实体域与服务
 
@@ -133,6 +135,21 @@ Home Assistant 会先创建 config entry，再完成核心启动。此时其它�
 
 **时钟往后拨**的那一天，"01:30"会出现两次。集成取第一次（较早的偏移），
 并且所有动作按**绝对时间戳**排序，而不是按墙上时间，否则顺序会错乱。
+
+## 图标放在哪里
+
+Home Assistant 的 `brands` 集成只从**集成本体内**读取图标：
+
+```python
+brand_dir = Path(integration.file_path) / "brand"
+```
+
+`integration.file_path` 是 `custom_components/staggered_switch`，因此图标必须位于
+`custom_components/staggered_switch/brand/`。放在仓库根的 `brand/` 只有 HACS 会
+用到，Home Assistant 完全读不到——这正是图标不显示的原因。
+
+可用的文件名受 `ALLOWED_IMAGES` 限制：`icon.png`、`icon@2x.png`、`logo.png`、
+`logo@2x.png`、`dark_icon.png` 等。`icon.png` 期望 256×256，`@2x` 为 512×512。
 
 ## 为什么是 `service` 而不是 `helper`
 

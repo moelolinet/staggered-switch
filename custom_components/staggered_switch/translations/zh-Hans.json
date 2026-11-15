@@ -43,24 +43,19 @@
         "warning_no_actions": "\n\n**这个周期还没有动作**，不会执行任何操作。请先在下面添加至少一条动作。"
       },
       "rule": {
-        "title": "什么时候执行？",
-        "description": "天数从 1 到 {cycle_days}。",
+        "title": "何时、做什么、对哪个实体",
+        "description": "天数从 1 到 {cycle_days}。\n\n“打开/关闭”需要选择目标实体；选择“其他服务调用”时可以不填。",
         "data": {
           "day": "周期内第几天",
           "time": "执行时刻",
-          "service": "执行动作"
+          "service": "执行动作",
+          "entity_id": "目标实体"
         },
         "data_description": {
           "day": "1 表示周期第一天。",
           "time": "使用本地时间，夏令时变化会自动处理。",
-          "service": "打开或关闭实体，或调用任意服务并附带自定义参数。"
-        }
-      },
-      "target": {
-        "title": "目标实体",
-        "description": "将会对该实体执行“{service}”。",
-        "data": {
-          "entity_id": "实体"
+          "service": "打开或关闭实体，或调用任意服务并附带自定义参数。",
+          "entity_id": "“打开/关闭”必填；自定义服务调用时可留空。"
         }
       },
       "custom": {
@@ -88,7 +83,8 @@
     },
     "error": {
       "invalid_service": "请使用“domain.service”格式，例如“switch.turn_on”。",
-      "invalid_name": "请输入 1 到 64 个字符的名称。"
+      "invalid_name": "请输入 1 到 64 个字符的名称。",
+      "entity_required": "请选择目标实体，或把动作改为“其他服务调用”。"
     },
     "abort": {
       "too_many_rules": "该周期的动作数量已达上限。"
@@ -125,23 +121,19 @@
         "warning_no_actions": "\n\n**这个周期还没有动作**，不会执行任何操作。请先在下面添加至少一条动作。"
       },
       "rule": {
-        "title": "什么时候执行？",
-        "description": "天数从 1 到 {cycle_days}。",
+        "title": "何时、做什么、对哪个实体",
+        "description": "天数从 1 到 {cycle_days}。\n\n“打开/关闭”需要选择目标实体；选择“其他服务调用”时可以不填。",
         "data": {
           "day": "周期内第几天",
           "time": "执行时刻",
-          "service": "执行动作"
+          "service": "执行动作",
+          "entity_id": "目标实体"
         },
         "data_description": {
           "day": "1 表示周期第一天。",
-          "time": "使用本地时间，夏令时变化会自动处理。"
-        }
-      },
-      "target": {
-        "title": "目标实体",
-        "description": "将会对该实体执行“{service}”。",
-        "data": {
-          "entity_id": "实体"
+          "time": "使用本地时间，夏令时变化会自动处理。",
+          "service": "打开或关闭实体，或调用任意服务并附带自定义参数。",
+          "entity_id": "“打开/关闭”必填；自定义服务调用时可留空。"
         }
       },
       "custom": {
@@ -168,7 +160,8 @@
     },
     "error": {
       "invalid_service": "请使用“domain.service”格式，例如“switch.turn_on”。",
-      "invalid_name": "请输入 1 到 64 个字符的名称。"
+      "invalid_name": "请输入 1 到 64 个字符的名称。",
+      "entity_required": "请选择目标实体，或把动作改为“其他服务调用”。"
     },
     "abort": {
       "too_many_rules": "该周期的动作数量已达上限。"

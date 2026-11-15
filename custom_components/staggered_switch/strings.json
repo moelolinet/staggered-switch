@@ -43,24 +43,19 @@
         "warning_no_actions": "\n\n**This cycle has no actions yet**, so nothing will run. Add at least one action below."
       },
       "rule": {
-        "title": "When should it run?",
-        "description": "Day numbers run from 1 to {cycle_days}.",
+        "title": "When, what and where",
+        "description": "Day numbers run from 1 to {cycle_days}.\n\nPick the entity for *Turn on* / *Turn off*. It can be left empty for *Another service call*.",
         "data": {
           "day": "Day of the cycle",
           "time": "Time of day",
-          "service": "Action"
+          "service": "Action",
+          "entity_id": "Entity"
         },
         "data_description": {
           "day": "1 is the first day of the cycle.",
           "time": "Local time; daylight saving changes are handled automatically.",
-          "service": "Turn the entity on, off, or call any service with custom data."
-        }
-      },
-      "target": {
-        "title": "Which entity?",
-        "description": "The action “{service}” will be applied to this entity.",
-        "data": {
-          "entity_id": "Entity"
+          "service": "Turn the entity on, off, or call any service with custom data.",
+          "entity_id": "Required for turn on / turn off. Optional for a custom service call."
         }
       },
       "custom": {
@@ -88,7 +83,8 @@
     },
     "error": {
       "invalid_service": "Use the “domain.service” format, for example “switch.turn_on”.",
-      "invalid_name": "Enter a name of 1 to 64 characters."
+      "invalid_name": "Enter a name of 1 to 64 characters.",
+      "entity_required": "Choose an entity, or pick \"Another service call\"."
     },
     "abort": {
       "too_many_rules": "This cycle already has the maximum number of actions."
@@ -125,23 +121,19 @@
         "warning_no_actions": "\n\n**This cycle has no actions yet**, so nothing will run. Add at least one action below."
       },
       "rule": {
-        "title": "When should it run?",
-        "description": "Day numbers run from 1 to {cycle_days}.",
+        "title": "When, what and where",
+        "description": "Day numbers run from 1 to {cycle_days}.\n\nPick the entity for *Turn on* / *Turn off*. It can be left empty for *Another service call*.",
         "data": {
           "day": "Day of the cycle",
           "time": "Time of day",
-          "service": "Action"
+          "service": "Action",
+          "entity_id": "Entity"
         },
         "data_description": {
           "day": "1 is the first day of the cycle.",
-          "time": "Local time; daylight saving changes are handled automatically."
-        }
-      },
-      "target": {
-        "title": "Which entity?",
-        "description": "The action “{service}” will be applied to this entity.",
-        "data": {
-          "entity_id": "Entity"
+          "time": "Local time; daylight saving changes are handled automatically.",
+          "service": "Turn the entity on, off, or call any service with custom data.",
+          "entity_id": "Required for turn on / turn off. Optional for a custom service call."
         }
       },
       "custom": {
@@ -168,7 +160,8 @@
     },
     "error": {
       "invalid_service": "Use the “domain.service” format, for example “switch.turn_on”.",
-      "invalid_name": "Enter a name of 1 to 64 characters."
+      "invalid_name": "Enter a name of 1 to 64 characters.",
+      "entity_required": "Choose an entity, or pick \"Another service call\"."
     },
     "abort": {
       "too_many_rules": "This cycle already has the maximum number of actions."

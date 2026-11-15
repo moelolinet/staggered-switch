@@ -111,9 +111,23 @@ def schedule_schema(defaults: Mapping[str, Any]) -> vol.Schema:
     )
 
 
-def rule_schema(cycle_days: int, defaults: Mapping[str, Any]) -> vol.Schema:
-    """Return the form that says when an action happens."""
+def action_schema(cycle_days: int, defaults: Mapping[str, Any]) -> vol.Schema:
+    """Return the single form that describes one action.
+
+    Day, time, what to do and which entity are collected together: splitting
+    them over two pages made the flow feel unfinished, and the entity field is
+    only meaningful for the turn on / turn off choices anyway, so it is
+    optional here and ignored for a custom service call.
+    """
     day = min(max(int(defaults.get(CONF_RULE_DAY, 1)), 1), cycle_days)
+    entity = defaults.get(CONF_RULE_ENTITY)
+
+    entity_key = (
+        vol.Optional(CONF_RULE_ENTITY, default=entity)
+        if entity
+        else vol.Optional(CONF_RULE_ENTITY)
+    )
+
     return vol.Schema(
         {
             vol.Required(CONF_RULE_DAY, default=day): selector.NumberSelector(
@@ -136,25 +150,11 @@ def rule_schema(cycle_days: int, defaults: Mapping[str, Any]) -> vol.Schema:
                     translation_key="service",
                 )
             ),
-        }
-    )
-
-
-def target_schema(defaults: Mapping[str, Any]) -> vol.Schema:
-    """Return the entity picker for turn on / turn off actions."""
-    entity = defaults.get(CONF_RULE_ENTITY)
-    key = (
-        vol.Required(CONF_RULE_ENTITY, default=entity)
-        if entity
-        else vol.Required(CONF_RULE_ENTITY)
-    )
-    return vol.Schema(
-        {
-            key: selector.EntitySelector(
+            entity_key: selector.EntitySelector(
                 selector.EntitySelectorConfig(
                     domain=list(TOGGLE_DOMAINS), multiple=False
                 )
-            )
+            ),
         }
     )
 
@@ -483,48 +483,51 @@ class RuleSteps:
     async def async_step_rule(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Collect day, time and service of an action."""
+        """Collect day, time, action and entity on a single page."""
         cycle_days = int(self._working[CONF_CYCLE_DAYS])
+
         if user_input is not None:
-            self._draft = {
-                **self._draft,
-                **user_input,
-                CONF_RULE_DAY: int(user_input[CONF_RULE_DAY]),
-            }
-            if user_input[CONF_RULE_SERVICE] == CUSTOM_SERVICE:
+            service = str(user_input[CONF_RULE_SERVICE])
+            entity_id = user_input.get(CONF_RULE_ENTITY) or None
+            errors: dict[str, str] = {}
+
+            if service == CUSTOM_SERVICE:
+                # A custom call may still target the chosen entity, but it is
+                # not required; continue to the custom-service page.
+                self._draft = {
+                    **self._draft,
+                    **user_input,
+                    CONF_RULE_DAY: int(user_input[CONF_RULE_DAY]),
+                }
+                if entity_id:
+                    self._draft[CONF_RULE_ENTITY] = entity_id
                 return await self.async_step_custom()
-            return await self.async_step_target()
+
+            if not entity_id:
+                errors["base"] = "entity_required"
+            else:
+                draft = {
+                    **self._draft,
+                    **user_input,
+                    CONF_RULE_DAY: int(user_input[CONF_RULE_DAY]),
+                    CONF_RULE_ENTITY: entity_id,
+                    CONF_RULE_SERVICE: to_domain_service(service, entity_id),
+                    CONF_RULE_ENABLED: True,
+                }
+                draft.pop(CONF_RULE_DATA, None)
+                return await self._store_rule(draft)
+
+            return self.async_show_form(
+                step_id="rule",
+                data_schema=action_schema(cycle_days, {**self._draft, **user_input}),
+                description_placeholders={"cycle_days": str(cycle_days)},
+                errors=errors,
+            )
 
         return self.async_show_form(
             step_id="rule",
-            data_schema=rule_schema(cycle_days, self._draft),
+            data_schema=action_schema(cycle_days, self._draft),
             description_placeholders={"cycle_days": str(cycle_days)},
-        )
-
-    async def async_step_target(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        """Pick the entity a turn on / turn off action controls."""
-        if user_input is not None:
-            entity_id = user_input.get(CONF_RULE_ENTITY)
-            draft = {
-                **self._draft,
-                CONF_RULE_ENTITY: entity_id,
-                CONF_RULE_SERVICE: to_domain_service(
-                    str(self._draft.get(CONF_RULE_SERVICE, GENERIC_ON)),
-                    str(entity_id) if entity_id else None,
-                ),
-                CONF_RULE_ENABLED: True,
-            }
-            draft.pop(CONF_RULE_DATA, None)
-            return await self._store_rule(draft)
-
-        return self.async_show_form(
-            step_id="target",
-            data_schema=target_schema(self._draft),
-            description_placeholders={
-                "service": str(self._draft.get(CONF_RULE_SERVICE, ""))
-            },
         )
 
     async def async_step_custom(
@@ -543,7 +546,11 @@ class RuleSteps:
                     CONF_RULE_DATA: dict(user_input.get(CONF_RULE_DATA) or {}),
                     CONF_RULE_ENABLED: True,
                 }
-                draft.pop(CONF_RULE_ENTITY, None)
+                # Keep the entity picked on the combined page: a custom service
+                # often targets one entity, and it lets the action summary show
+                # what the call touches.
+                if not draft.get(CONF_RULE_ENTITY):
+                    draft.pop(CONF_RULE_ENTITY, None)
                 return await self._store_rule(draft)
 
         defaults = {

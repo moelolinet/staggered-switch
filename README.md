@@ -60,13 +60,18 @@ Copy the `custom_components/staggered_switch` folder into your Home Assistant
    | First day of the cycle | Day 1 of the cycle. |
    | Cycle length (days) | How many days one full cycle lasts. |
 
-4. Add actions from the menu. For each action choose:
+4. Add actions from the menu. Everything about one action is collected on a
+   **single page**:
 
    | Field | Meaning |
    | --- | --- |
    | Day of the cycle | 1 … cycle length |
    | Time of day | Local wall clock time |
    | Action | Turn on, turn off, or another service call |
+   | Entity | Which entity to switch (required for turn on / turn off) |
+
+   Pick *Another service call* to call an arbitrary service; the entity field is
+   optional in that case and is passed along when you fill it in.
 
 5. Repeat **Add an action** as needed, then **Save and finish**.
 
