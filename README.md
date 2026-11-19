@@ -1,4 +1,19 @@
+<div align="center">
+
+<img src="custom_components/staggered_switch/brand/icon@2x.png" width="150" alt="Staggered Switch">
+
 # Staggered Switch
+
+Home Assistant custom integration for repeating multi-day schedules
+
+**English** | [简体中文](README.zh-CN.md)
+
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![GitHub release](https://img.shields.io/github/v/release/moelolinet/staggered-switch)](https://github.com/moelolinet/staggered-switch/releases)
+
+</div>
+
+---
 
 A Home Assistant custom integration that switches an entity on or off according
 to a repeating **multi-day cycle**. Instead of writing one automation per shift,
@@ -7,8 +22,6 @@ cycle repeats forever.
 
 It is designed for schedules that do not line up with weeks: 8-day rotations,
 12-hour shift patterns, alternating duty rosters, or any "every N days" plan.
-
-**English** | [简体中文](README.zh-CN.md)
 
 > **Note** — this is a community integration, not an official Home Assistant
 > integration. Home Assistant will show the usual "not tested by Home Assistant"
