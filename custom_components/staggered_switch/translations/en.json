@@ -31,16 +31,7 @@
           "edit_action": "Edit an action",
           "delete_action": "Delete an action",
           "finish": "Save and finish"
-        },
-        "rule_summary": {
-          "rule_label": "Day {day} at {time} - {service}",
-          "rule_label_target": "Day {day} at {time} - {service} ({entity})",
-          "rule_disabled": "{label} (disabled)",
-          "no_actions": "No actions yet - use *Add an action* below.",
-          "action_on": "turn on",
-          "action_off": "turn off"
-        },
-        "warning_no_actions": "\n\n**This cycle has no actions yet**, so nothing will run. Add at least one action below."
+        }
       },
       "rule": {
         "title": "When, what and where",
@@ -109,16 +100,7 @@
           "edit_action": "Edit an action",
           "delete_action": "Delete an action",
           "finish": "Save and finish"
-        },
-        "rule_summary": {
-          "rule_label": "Day {day} at {time} - {service}",
-          "rule_label_target": "Day {day} at {time} - {service} ({entity})",
-          "rule_disabled": "{label} (disabled)",
-          "no_actions": "No actions yet - use *Add an action* below.",
-          "action_on": "turn on",
-          "action_off": "turn off"
-        },
-        "warning_no_actions": "\n\n**This cycle has no actions yet**, so nothing will run. Add at least one action below."
+        }
       },
       "rule": {
         "title": "When, what and where",
@@ -198,5 +180,14 @@
         }
       }
     }
+  },
+  "common": {
+    "rule_label": "Day {day} at {time} - {service}",
+    "rule_label_target": "Day {day} at {time} - {service} ({entity})",
+    "rule_disabled": "{label} (disabled)",
+    "no_actions": "No actions yet - use *Add an action* below.",
+    "action_on": "turn on",
+    "action_off": "turn off",
+    "warning_no_actions": "\n\n**This cycle has no actions yet**, so nothing will run. Add at least one action below."
   }
 }

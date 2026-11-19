@@ -31,16 +31,7 @@
           "edit_action": "修改动作",
           "delete_action": "删除动作",
           "finish": "保存并完成"
-        },
-        "rule_summary": {
-          "rule_label": "第 {day} 天 {time} - {service}",
-          "rule_label_target": "第 {day} 天 {time} - {service}（{entity}）",
-          "rule_disabled": "{label}（已停用）",
-          "no_actions": "还没有动作，请用下面的“添加动作”。",
-          "action_on": "打开",
-          "action_off": "关闭"
-        },
-        "warning_no_actions": "\n\n**这个周期还没有动作**，不会执行任何操作。请先在下面添加至少一条动作。"
+        }
       },
       "rule": {
         "title": "何时、做什么、对哪个实体",
@@ -109,16 +100,7 @@
           "edit_action": "修改动作",
           "delete_action": "删除动作",
           "finish": "保存并完成"
-        },
-        "rule_summary": {
-          "rule_label": "第 {day} 天 {time} - {service}",
-          "rule_label_target": "第 {day} 天 {time} - {service}（{entity}）",
-          "rule_disabled": "{label}（已停用）",
-          "no_actions": "还没有动作，请用下面的“添加动作”。",
-          "action_on": "打开",
-          "action_off": "关闭"
-        },
-        "warning_no_actions": "\n\n**这个周期还没有动作**，不会执行任何操作。请先在下面添加至少一条动作。"
+        }
       },
       "rule": {
         "title": "何时、做什么、对哪个实体",
@@ -198,5 +180,14 @@
         }
       }
     }
+  },
+  "common": {
+    "rule_label": "第 {day} 天 {time} - {service}",
+    "rule_label_target": "第 {day} 天 {time} - {service}（{entity}）",
+    "rule_disabled": "{label}（已停用）",
+    "no_actions": "还没有动作，请用下面的“添加动作”。",
+    "action_on": "打开",
+    "action_off": "关闭",
+    "warning_no_actions": "\n\n**这个周期还没有动作**，不会执行任何操作。请先在下面添加至少一条动作。"
   }
 }

@@ -247,7 +247,7 @@ def stored_rules(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
     return [dict(rule) for rule in rules if isinstance(rule, Mapping)]
 
 
-TRANSLATION_KEY = "component.staggered_switch.config.step.menu.rule_summary"
+TRANSLATION_KEY = "component.staggered_switch.common"
 
 
 SERVICE_LABEL_PREFIX = "component.staggered_switch.selector.service.options"
@@ -298,9 +298,8 @@ async def async_rule_summary_strings(hass) -> dict[str, str]:
         translations = await translation.async_get_translations(
             hass,
             hass.config.language,
-            "config",
+            "common",
             integrations=[DOMAIN],
-            config_flow=True,
         )
     except Exception:  # noqa: BLE001 - never break the flow over wording
         return fallback
