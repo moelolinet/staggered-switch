@@ -170,8 +170,8 @@
   "selector": {
     "service": {
       "options": {
-        "switch.turn_on": "打开",
-        "switch.turn_off": "关闭",
+        "turn-on": "打开",
+        "turn-off": "关闭",
         "custom": "其他服务调用"
       }
     }

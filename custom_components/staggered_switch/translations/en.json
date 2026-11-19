@@ -170,8 +170,8 @@
   "selector": {
     "service": {
       "options": {
-        "switch.turn_on": "Turn on",
-        "switch.turn_off": "Turn off",
+        "turn-on": "Turn on",
+        "turn-off": "Turn off",
         "custom": "Another service call"
       }
     }

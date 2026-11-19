@@ -49,11 +49,22 @@ _LOGGER = logging.getLogger(__name__)
 
 CUSTOM_SERVICE = "custom"
 
-SERVICE_OPTIONS = [
-    {"value": "switch.turn_on", "label": "Turn on"},
-    {"value": "switch.turn_off", "label": "Turn off"},
-    {"value": CUSTOM_SERVICE, "label": "Another service call"},
-]
+SERVICE_VALUES = ("switch.turn_on", "switch.turn_off", CUSTOM_SERVICE)
+
+DEFAULT_SERVICE_LABELS = {
+    "switch.turn_on": "Turn on",
+    "switch.turn_off": "Turn off",
+    CUSTOM_SERVICE: "Another service call",
+}
+
+# Translation slug for each stored value. A translation key may not contain a
+# dot, so the selector options are keyed by these slugs instead of by the
+# service id that is actually stored in the config entry.
+SERVICE_LABELS = {
+    "switch.turn_on": ("turn-on", "Turn on"),
+    "switch.turn_off": ("turn-off", "Turn off"),
+    CUSTOM_SERVICE: ("custom", "Another service call"),
+}
 
 MENU_OPTIONS = ["add_action", "edit_action", "delete_action", "finish"]
 
@@ -111,7 +122,20 @@ def schedule_schema(defaults: Mapping[str, Any]) -> vol.Schema:
     )
 
 
-def action_schema(cycle_days: int, defaults: Mapping[str, Any]) -> vol.Schema:
+def service_options(labels: Mapping[str, str] | None = None) -> list[dict[str, str]]:
+    """Return the service picker options with resolved labels."""
+    labels = labels or {}
+    return [
+        {"value": value, "label": labels.get(value, DEFAULT_SERVICE_LABELS[value])}
+        for value in SERVICE_VALUES
+    ]
+
+
+def action_schema(
+    cycle_days: int,
+    defaults: Mapping[str, Any],
+    labels: Mapping[str, str] | None = None,
+) -> vol.Schema:
     """Return the single form that describes one action.
 
     Day, time, what to do and which entity are collected together: splitting
@@ -145,9 +169,8 @@ def action_schema(cycle_days: int, defaults: Mapping[str, Any]) -> vol.Schema:
                 ),
             ): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options=SERVICE_OPTIONS,
+                    options=service_options(labels),
                     mode=selector.SelectSelectorMode.DROPDOWN,
-                    translation_key="service",
                 )
             ),
             entity_key: selector.EntitySelector(
@@ -225,6 +248,32 @@ def stored_rules(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
 
 
 TRANSLATION_KEY = "component.staggered_switch.config.step.menu.rule_summary"
+
+
+SERVICE_LABEL_PREFIX = "component.staggered_switch.selector.service.options"
+
+
+async def async_service_labels(hass) -> dict[str, str]:
+    """Return the localised labels for the service picker options.
+
+    The selector's own translation keys are slugs (a translation key may not
+    contain a dot), so the label of each stored value is looked up by its slug
+    and falls back to English when translations are unavailable.
+    """
+    try:
+        translations = await translation.async_get_translations(
+            hass,
+            hass.config.language,
+            "selector",
+            integrations=[DOMAIN],
+        )
+    except Exception:  # noqa: BLE001 - never break the flow over wording
+        return dict(DEFAULT_SERVICE_LABELS)
+
+    return {
+        value: translations.get(f"{SERVICE_LABEL_PREFIX}.{slug}", fallback)
+        for value, (slug, fallback) in SERVICE_LABELS.items()
+    }
 
 
 async def async_rule_summary_strings(hass) -> dict[str, str]:
@@ -485,6 +534,7 @@ class RuleSteps:
     ) -> ConfigFlowResult:
         """Collect day, time, action and entity on a single page."""
         cycle_days = int(self._working[CONF_CYCLE_DAYS])
+        labels = await async_service_labels(self.hass)
 
         if user_input is not None:
             service = str(user_input[CONF_RULE_SERVICE])
@@ -519,14 +569,16 @@ class RuleSteps:
 
             return self.async_show_form(
                 step_id="rule",
-                data_schema=action_schema(cycle_days, {**self._draft, **user_input}),
+                data_schema=action_schema(
+                    cycle_days, {**self._draft, **user_input}, labels
+                ),
                 description_placeholders={"cycle_days": str(cycle_days)},
                 errors=errors,
             )
 
         return self.async_show_form(
             step_id="rule",
-            data_schema=action_schema(cycle_days, self._draft),
+            data_schema=action_schema(cycle_days, self._draft, labels),
             description_placeholders={"cycle_days": str(cycle_days)},
         )
 
