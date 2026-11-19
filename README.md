@@ -8,6 +8,8 @@ cycle repeats forever.
 It is designed for schedules that do not line up with weeks: 8-day rotations,
 12-hour shift patterns, alternating duty rosters, or any "every N days" plan.
 
+[![简体中文](https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-0969da?style=for-the-badge&logo=readme&logoColor=white)](README.zh-CN.md)
+
 > **Note** — this is a community integration, not an official Home Assistant
 > integration. Home Assistant will show the usual "not tested by Home Assistant"
 > warning.
