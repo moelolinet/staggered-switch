@@ -6,7 +6,7 @@
 
 Home Assistant 自定义集成：按「多日轮换周期」定时开关实体
 
-[![English](https://img.shields.io/badge/English-6e7781?style=for-the-badge&logo=readme&logoColor=white)](README.md)
+[English](README.md) | **简体中文**
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub release](https://img.shields.io/github/v/release/moelolinet/staggered-switch)](https://github.com/moelolinet/staggered-switch/releases)
