@@ -25,7 +25,7 @@
       },
       "menu": {
         "title": "Actions",
-        "description": "Cycle length: {cycle_days} days · {count} action(s).\n\n{summary}\n{warning}",
+        "description": "Cycle length: {cycle_days} days · {count} action(s).\n\n{summary}\n\n{warning}",
         "menu_options": {
           "add_action": "Add an action",
           "edit_action": "Edit an action",
@@ -94,7 +94,7 @@
       },
       "menu": {
         "title": "Actions",
-        "description": "Cycle length: {cycle_days} days · {count} action(s).\n\n{summary}\n{warning}",
+        "description": "Cycle length: {cycle_days} days · {count} action(s).\n\n{summary}\n\n{warning}",
         "menu_options": {
           "add_action": "Add an action",
           "edit_action": "Edit an action",
@@ -188,6 +188,6 @@
     "no_actions": "No actions yet - use *Add an action* below.",
     "action_on": "turn on",
     "action_off": "turn off",
-    "warning_no_actions": "\n\n**This cycle has no actions yet**, so nothing will run. Add at least one action below."
+    "warning_no_actions": "**This cycle has no actions yet**, so nothing will run. Add at least one action below."
   }
 }

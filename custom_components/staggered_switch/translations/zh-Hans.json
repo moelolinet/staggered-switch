@@ -25,7 +25,7 @@
       },
       "menu": {
         "title": "动作列表",
-        "description": "周期 {cycle_days} 天 · 共 {count} 条动作。\n\n{summary}\n{warning}",
+        "description": "周期 {cycle_days} 天 · 共 {count} 条动作。\n\n{summary}\n\n{warning}",
         "menu_options": {
           "add_action": "添加动作",
           "edit_action": "修改动作",
@@ -94,7 +94,7 @@
       },
       "menu": {
         "title": "动作列表",
-        "description": "周期 {cycle_days} 天 · 共 {count} 条动作。\n\n{summary}\n{warning}",
+        "description": "周期 {cycle_days} 天 · 共 {count} 条动作。\n\n{summary}\n\n{warning}",
         "menu_options": {
           "add_action": "添加动作",
           "edit_action": "修改动作",
@@ -188,6 +188,6 @@
     "no_actions": "还没有动作，请用下面的“添加动作”。",
     "action_on": "打开",
     "action_off": "关闭",
-    "warning_no_actions": "\n\n**这个周期还没有动作**，不会执行任何操作。请先在下面添加至少一条动作。"
+    "warning_no_actions": "**这个周期还没有动作**，不会执行任何操作。请先在下面添加至少一条动作。"
   }
 }

@@ -290,7 +290,7 @@ async def async_rule_summary_strings(hass) -> dict[str, str]:
         "action_on": "turn on",
         "action_off": "turn off",
         "warning_no_actions": (
-            "\n\n**This cycle has no actions yet**, so nothing will run. "
+            "**This cycle has no actions yet**, so nothing will run. "
             "Add at least one action below."
         ),
     }
